@@ -46,6 +46,11 @@ public class Human {
         this.bornDate = toDate(bornDate);
     }
 
+    @Override
+    public String toString() {
+        return "Human: " +
+                passportNumber + " " + secondName + " " + firstName +" " +lastName +" "+ bornDate;
+    }
 
     public Human(){}
 

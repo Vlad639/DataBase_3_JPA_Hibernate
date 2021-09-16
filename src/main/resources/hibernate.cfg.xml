@@ -7,7 +7,6 @@
         <property name="hibernate.connection.password">qwerty123</property>
         <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQL94Dialect</property>
 
-        <!-- Other configuration -->
     </session-factory>
 
 </hibernate-configuration>
