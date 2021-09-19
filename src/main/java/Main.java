@@ -26,13 +26,13 @@ public class Main {
         return HibernateSessionFactory.getSessionFactory().openSession();
     }
 
-    private static void showResidentsFromResultSet(List<Human> resultList){
-        if (resultList.isEmpty()){
-            System.out.println("Получен пустой ответ");
+    private static void showHumansFromList(List<Human> humanList){
+        if (humanList.isEmpty()){
+            System.out.println("Получен пустой список!");
             return;
         }
 
-        for (Human elem: resultList)
+        for (Human elem: humanList)
             System.out.println(elem);
 
     }
@@ -41,9 +41,9 @@ public class Main {
 
         session = newSession();
 
-        fillTables();
+        //fillTables();
 
-        //showHumansInCertainFlat(42);
+        showHumansInCertainFlat(12);
         //showFlatOwners(1);
         //showHumansInCertainCity(2);
         //showHumansInCertainHouse(3);
@@ -275,6 +275,10 @@ public class Main {
 
 
     private static void showHumansInCertainFlat(int flatID) {
+        FlatService flatService = new FlatService();
+        Flat flat = flatService.serviceGetByID(flatID);
+        showHumansFromList(flat.getResidents());
+
 
     }
 

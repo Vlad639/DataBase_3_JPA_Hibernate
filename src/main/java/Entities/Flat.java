@@ -26,7 +26,7 @@ public class Flat {
             joinColumns = @JoinColumn(name = "flat_link"),
             inverseJoinColumns = @JoinColumn(name = "human_link")
     )
-    private List<Human> ResidentsInThisFlat;
+    private List<Human> residents;
 
     @Column(name = "flat_number")
     private int flatNumber;
@@ -37,11 +37,15 @@ public class Flat {
 
     public Flat(){}
 
-    public void addResident(Human resident){
-        if (ResidentsInThisFlat == null)
-            ResidentsInThisFlat = new ArrayList<>();
+    public List<Human> getResidents(){
+        return residents;
+    }
 
-        ResidentsInThisFlat.add(resident);
+    public void addResident(Human resident){
+        if (residents == null)
+            residents = new ArrayList<>();
+
+        residents.add(resident);
     }
 
     public Flat(int number, House houseLink){
