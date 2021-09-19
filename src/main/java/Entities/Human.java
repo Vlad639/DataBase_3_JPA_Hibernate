@@ -1,6 +1,7 @@
 package Entities;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -11,6 +12,22 @@ public class Human {
     @Column(name = "human_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long humanID;
+
+    @ManyToMany
+    @JoinTable(
+            name = "public.\"Flats_owners\"",
+            joinColumns = @JoinColumn(name = "human_link"),
+            inverseJoinColumns = @JoinColumn(name = "flat_link")
+    )
+    private List<Flat> flatsOfThisHuman;
+
+    @ManyToMany
+    @JoinTable(
+            name = "public.\"Residents\"",
+            joinColumns = @JoinColumn(name = "human_link"),
+            inverseJoinColumns = @JoinColumn(name = "flat_link")
+    )
+    private List<Flat> flatsInWhichHumanLive;
 
     @Column(name = "passport_number")
     private String passportNumber;
@@ -26,6 +43,13 @@ public class Human {
 
     @Column(name = "born_date")
     private Date bornDate;
+
+    public void addFlatWhichHumanOwner(Flat flat){
+        if (flatsOfThisHuman == null)
+            flatsOfThisHuman = new ArrayList<>();
+
+        flatsOfThisHuman.add(flat);
+    }
 
     private Date toDate(String date) throws DataConvertException {
         String[] words = date.split("\\.");

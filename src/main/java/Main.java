@@ -21,45 +21,9 @@ public class Main {
     private static List<Human> humanList = new ArrayList<>();
     private static Session session;
 
-    private static void executeSQL(String query) {
-        session.beginTransaction();
-        session.createSQLQuery(query);
-        session.getTransaction().commit();
-    }
-
-    private static String getFileContent(String fileName){
-        String line;
-        StringBuilder fileContent = new StringBuilder();
-
-        try(FileReader fileReader = new FileReader(fileName);
-            BufferedReader reader = new BufferedReader(fileReader)){
-            line  = reader.readLine();
-            while (line != null){
-                fileContent.append(line).append("\n");
-                line = reader.readLine();
-            }
-            return fileContent.toString();
-        }
-        catch(Exception e){
-            e.printStackTrace();
-        }
-        return "";
-    }
 
     private static Session newSession(){
         return HibernateSessionFactory.getSessionFactory().openSession();
-    }
-
-    private static void executeSqlQueryFromFIle(String fileName) {
-        String query = getFileContent(fileName);
-        executeSQL(query);
-    }
-
-    private static void executeSQLandShowResult(String query, int id) {
-        NativeQuery hibernateQuery = session.createSQLQuery(query);
-        hibernateQuery.setParameter("param",id);
-        List<Human> humanList = hibernateQuery.addEntity(Human.class).list();
-        showResidentsFromResultSet(humanList);
     }
 
     private static void showResidentsFromResultSet(List<Human> resultList){
@@ -77,18 +41,17 @@ public class Main {
 
         session = newSession();
 
-        createTables();
         fillTables();
 
-        showHumansInCertainFlat(42);
-        showFlatOwners(1);
-        showHumansInCertainCity(2);
-        showHumansInCertainHouse(3);
-        showHumansFromStreetList(new int[]{7, 9});
-        registerHumanInFlat(1, 4);
-        deleteHumanFromFlat(2);
-        moveResidentsToNewFlat(42, 8);
-        changesFlatsResidents(3,7);
+        //showHumansInCertainFlat(42);
+        //showFlatOwners(1);
+        //showHumansInCertainCity(2);
+        //showHumansInCertainHouse(3);
+        //showHumansFromStreetList(new int[]{7, 9});
+        //registerHumanInFlat(1, 4);
+        //deleteHumanFromFlat(2);
+        //moveResidentsToNewFlat(42, 8);
+        //changesFlatsResidents(3,7);
 
         session.close();
 
@@ -100,9 +63,6 @@ public class Main {
         }
     }
 
-    private static void createTables()  {
-        executeSqlQueryFromFIle("src/main/resources/create_tables.sql");
-    }
 
     private static void fillTables() {
         fillCities();
@@ -115,7 +75,11 @@ public class Main {
         catch (DataConvertException e){
             e.printStackTrace();
         }
-        fillOwnersAndResidentsTables();
+        fillFlatsOwners();
+        fillResidents();
+
+
+
 
     }
 
@@ -269,172 +233,81 @@ public class Main {
 
     }
 
-    private static void fillOwnersAndResidentsTables() {
-        executeSqlQueryFromFIle("src/main/resources/fill_owners_and_residents.sql");
+    private static void fillFlatsOwners() {
+        HumanService humanService = new HumanService();
+        humanList.get(0).addFlatWhichHumanOwner(flatList.get(0));
+        humanList.get(1).addFlatWhichHumanOwner(flatList.get(4));
+        humanList.get(1).addFlatWhichHumanOwner(flatList.get(9));
+        humanList.get(2).addFlatWhichHumanOwner(flatList.get(11));
+        humanList.get(3).addFlatWhichHumanOwner(flatList.get(12));
+        humanList.get(4).addFlatWhichHumanOwner(flatList.get(13));
+        humanList.get(5).addFlatWhichHumanOwner(flatList.get(15));
+        humanList.get(6).addFlatWhichHumanOwner(flatList.get(17));
+        humanList.get(6).addFlatWhichHumanOwner(flatList.get(24));
+        humanList.get(7).addFlatWhichHumanOwner(flatList.get(25));
+        humanList.get(8).addFlatWhichHumanOwner(flatList.get(28));
+        humanList.get(12).addFlatWhichHumanOwner(flatList.get(30));
+        humanList.get(13).addFlatWhichHumanOwner(flatList.get(32));
+
+        for (Human elem: humanList)
+            humanService.serviceUpdate(elem);
+    }
+
+    private static void fillResidents(){
+        FlatService flatService = new FlatService();
+        flatList.get(0).addResident(humanList.get(0));
+        flatList.get(4).addResident(humanList.get(1));
+        flatList.get(5).addResident(humanList.get(2));
+        flatList.get(11).addResident(humanList.get(9));
+        flatList.get(11).addResident(humanList.get(10));
+        flatList.get(11).addResident(humanList.get(12));
+        flatList.get(15).addResident(humanList.get(6));
+        flatList.get(17).addResident(humanList.get(7));
+        flatList.get(24).addResident(humanList.get(8));
+        flatList.get(25).addResident(humanList.get(9));
+        flatList.get(28).addResident(humanList.get(10));
+        flatList.get(30).addResident(humanList.get(11));
+        flatList.get(47).addResident(humanList.get(13));
+
+        for (Flat elem: flatList)
+            flatService.serviceUpdate(elem);
     }
 
 
     private static void showHumansInCertainFlat(int flatID) {
-        executeSQLandShowResult(
-                "SELECT \n" +
-                        "\tpublic.\"Humans\".* \n" +
-                        "FROM\n" +
-                        "\tpublic.\"Humans\"\n" +
-                        "\tJOIN public.\"Residents\"\n" +
-                        "\t\tON human_id = human_link\n" +
-                        "\tWHERE flat_link = :param ;",
-                flatID);
+
     }
 
     private static void showFlatOwners(int flatID) {
-        executeSQLandShowResult(
-                "SELECT \n" +
-                        "\tpublic.\"Humans\".* \n" +
-                        "FROM \n" +
-                        "\tpublic.\"Humans\"\n" +
-                        "\t\n" +
-                        "\tJOIN public.\"Flats_owners\"\n" +
-                        "\tON human_link = human_id \n" +
-                        "WHERE\n" +
-                        "\tflat_link = :param ;",
-                flatID) ;
+
     }
 
     private static void showHumansInCertainCity(int cityID) {
-        executeSQLandShowResult(
-                "SELECT \n" +
-                        "\tpublic.\"Humans\".*\n" +
-                        "FROM \n" +
-                        "\tpublic.\"Streets\"\n" +
-                        "\t\n" +
-                        "\tJOIN public.\"Houses\"\n" +
-                        "\tON street_link = street_id\n" +
-                        "\t\n" +
-                        "\tJOIN public.\"Flats\"\n" +
-                        "\tON house_link = house_id\n" +
-                        "\t\n" +
-                        "\tJOIN public.\"Residents\"\n" +
-                        "\tON flat_link = flat_id\n" +
-                        "\t\n" +
-                        "\tJOIN public.\"Humans\"\n" +
-                        "\tON human_link = human_id\n" +
-                        "\t\n" +
-                        "\tWHERE city_link = :param ;",
-                cityID);
+
     }
 
     private static void showHumansInCertainHouse(int houseID)  {
-        executeSQLandShowResult(
-                "SELECT \n" +
-                        "\tpublic.\"Humans\".*\n" +
-                        "FROM \n" +
-                        "\tpublic.\"Flats\" \n" +
-                        "\t\n" +
-                        "\tJOIN public.\"Residents\"\n" +
-                        "\tON flat_link = flat_id\n" +
-                        "\t\n" +
-                        "\tJOIN public.\"Humans\"\n" +
-                        "\tON human_link = human_id\n" +
-                        "\t\n" +
-                        "\tWHERE house_link = :param ;",
-                houseID);
+
     }
 
     private static void showHumansFromStreetList(int[] streetList) {
-        StringBuilder streetListFromIN = new StringBuilder("(");
-        for (int elem: streetList) {
-            streetListFromIN.append(elem).append(", ");
-        }
-        streetListFromIN.append("!");
-        streetListFromIN = new StringBuilder(streetListFromIN.toString().replace(", !", ")"));
 
-        String query = "SELECT \n" +
-                "\tpublic.\"Humans\".* \n" +
-                "FROM \n" +
-                "\tpublic.\"Houses\"\n" +
-                "\t\n" +
-                "\tJOIN public.\"Flats\"\n" +
-                "\tON house_link = house_id\n" +
-                "\t\n" +
-                "\tJOIN public.\"Residents\"\n" +
-                "\tON flat_link = flat_id\n" +
-                "\t\n" +
-                "\tJOIN public.\"Humans\"\n" +
-                "\tON human_link = human_id\n" +
-                "\t\n" +
-                "\tWHERE street_link in "+streetListFromIN+";";
-
-        NativeQuery hibernateQuery = session.createSQLQuery(query);
-        List<Human> humanList = hibernateQuery.addEntity(Human.class).list();
-        showResidentsFromResultSet(humanList);
     }
 
     private static void registerHumanInFlat(int human_id, int flat_id)  {
-        String query = "INSERT INTO public.\"Residents\" (human_link, flat_link)\n" +
-                "VALUES ( :human_id , :flat_id );";
 
-        NativeQuery hibernateQuery = session.createSQLQuery(query);
-        session.beginTransaction();
-        hibernateQuery.setParameter("human_id", human_id);
-        hibernateQuery.setParameter("flat_id",flat_id);
-        int queryStatus = hibernateQuery.executeUpdate();
-        if (queryStatus == 0)
-            System.out.println("registerHumanInFlat - запрос не выполнен!");
-
-        session.getTransaction().commit();
     }
 
     private static void deleteHumanFromFlat(int human_id) {
-        String query = "DELETE FROM public.\"Residents\"\n" +
-                "WHERE human_link = :human_id ";
 
-        NativeQuery hibernateQuery = session.createSQLQuery(query);
-        session.beginTransaction();
-        hibernateQuery.setParameter("human_id", human_id);
-        int queryStatus = hibernateQuery.executeUpdate();
-        if (queryStatus == 0)
-            System.out.println("deleteHumanFromFlat - запрос не выполнен!");
-
-        session.getTransaction().commit();
     }
 
     private static void moveResidentsToNewFlat(int oldFlat, int newFlat) {
-        String query = "UPDATE public.\"Residents\"\n" +
-                "\tSET flat_link = :new_flat \n" +
-                "WHERE flat_link = :old_flat ;";
 
-        NativeQuery hibernateQuery = session.createSQLQuery(query);
-        session.beginTransaction();
-        hibernateQuery.setParameter("new_flat", newFlat);
-        hibernateQuery.setParameter("old_flat", oldFlat);
-        int queryStatus = hibernateQuery.executeUpdate();
-        if (queryStatus == 0)
-            System.out.println("moveResidentsToNewFlat - запрос не выполнен!");
-
-        session.getTransaction().commit();
     }
 
     private static void changesFlatsResidents(int firstFlatID, int secondFlatID) {
-        String query = "WITH variables AS (SELECT ARRAY[ :first_flat , :second_flat ] AS var_index)\n" +
-                "\n" +
-                "UPDATE public.\"Residents\"\n" +
-                "SET flat_link = \n" +
-                "\tCASE\n" +
-                "    \tWHEN flat_link = (SELECT var_index[1] FROM variables) THEN (SELECT var_index[2] FROM variables)\n" +
-                "\t\tWHEN flat_link = (SELECT var_index[2] FROM variables) THEN (SELECT var_index[1] FROM variables)\n" +
-                "    END\n" +
-                "WHERE flat_link IN ((SELECT var_index[1] FROM variables), (SELECT var_index[2] FROM variables));";
 
-        NativeQuery hibernateQuery = session.createSQLQuery(query);
-        session.beginTransaction();
-        hibernateQuery.setParameter("first_flat", firstFlatID);
-        hibernateQuery.setParameter("second_flat", secondFlatID);
-        int queryStatus = hibernateQuery.executeUpdate();
-        System.out.println(queryStatus);
-        if (queryStatus == 0)
-            System.out.println("changesFlatsResidents - запрос не выполнен!");
-
-        session.getTransaction().commit();
 
     }
 

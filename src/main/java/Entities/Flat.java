@@ -1,6 +1,8 @@
 package Entities;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "public.\"Flats\"")
@@ -10,6 +12,22 @@ public class Flat {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long flatID;
 
+    @ManyToMany
+    @JoinTable(
+            name = "public.\"Flats_owners\"",
+            joinColumns = @JoinColumn(name = "flat_link"),
+            inverseJoinColumns = @JoinColumn(name = "human_link")
+    )
+    private List<Human> ownersThisFlat;
+
+    @ManyToMany
+    @JoinTable(
+            name = "public.\"Residents\"",
+            joinColumns = @JoinColumn(name = "flat_link"),
+            inverseJoinColumns = @JoinColumn(name = "human_link")
+    )
+    private List<Human> ResidentsInThisFlat;
+
     @Column(name = "flat_number")
     private int flatNumber;
 
@@ -18,6 +36,13 @@ public class Flat {
     private House houseLink;
 
     public Flat(){}
+
+    public void addResident(Human resident){
+        if (ResidentsInThisFlat == null)
+            ResidentsInThisFlat = new ArrayList<>();
+
+        ResidentsInThisFlat.add(resident);
+    }
 
     public Flat(int number, House houseLink){
         flatNumber = number;
