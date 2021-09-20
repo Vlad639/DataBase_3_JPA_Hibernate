@@ -18,7 +18,7 @@ public class Flat {
             joinColumns = @JoinColumn(name = "flat_link"),
             inverseJoinColumns = @JoinColumn(name = "human_link")
     )
-    private List<Human> ownersThisFlat;
+    private List<Human> owners;
 
     @ManyToMany
     @JoinTable(
@@ -37,6 +37,7 @@ public class Flat {
 
     public Flat(){}
 
+
     public List<Human> getResidents(){
         return residents;
     }
@@ -46,6 +47,25 @@ public class Flat {
             residents = new ArrayList<>();
 
         residents.add(resident);
+    }
+
+    public void setFlatNumber(int flatNumber) {
+        this.flatNumber = flatNumber;
+    }
+
+    public List<Human> getOwners(){
+        return owners;
+    }
+
+    public void addOwner(Human resident){
+        if (owners == null)
+            owners = new ArrayList<>();
+
+        owners.add(resident);
+    }
+
+    public int getFlatNumber() {
+        return flatNumber;
     }
 
     public Flat(int number, House houseLink){

@@ -1,7 +1,7 @@
 package DAO;
 public interface DAOstandart<T> {
 
-        public T getByID(int ID);
+        public T getByID(Long ID);
 
         public void save(T obj);
 

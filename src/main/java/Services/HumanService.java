@@ -8,7 +8,7 @@ public class HumanService implements ServiceStandart<Human>{
 
     public HumanService(){}
 
-    public Human serviceGetByID(int ID){
+    public Human serviceGetByID(Long ID){
         return humanDAO.getByID(ID);
     }
 
@@ -23,4 +23,5 @@ public class HumanService implements ServiceStandart<Human>{
     public void serviceDelete(Human human){
         humanDAO.delete(human);
     }
+
 }

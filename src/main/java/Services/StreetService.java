@@ -10,7 +10,7 @@ public class StreetService implements ServiceStandart<Street>{
 
     public StreetService(){}
 
-    public Street serviceGetByID(int ID){
+    public Street serviceGetByID(Long ID){
         return streetDAO.getByID(ID);
     }
 

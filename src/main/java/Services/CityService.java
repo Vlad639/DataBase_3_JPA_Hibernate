@@ -8,7 +8,7 @@ public class CityService implements ServiceStandart<City>{
 
     public CityService(){}
 
-    public City serviceGetByID(int ID){
+    public City serviceGetByID(Long ID){
         return cityDAO.getByID(ID);
     }
 

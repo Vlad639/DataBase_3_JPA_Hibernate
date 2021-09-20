@@ -8,8 +8,11 @@ import org.hibernate.Transaction;
 
 
 public class HouseDAO implements DAOstandart<House>{
-    public House getByID(int id){
-        return HibernateSessionFactory.getSessionFactory().openSession().get(House.class,id);
+    public House getByID(Long id){
+        Session session = HibernateSessionFactory.getSessionFactory().openSession();
+        House house = session.get(House.class,id);
+        session.close();
+        return house;
     }
 
     public void save(House house){

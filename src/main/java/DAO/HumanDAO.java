@@ -7,8 +7,11 @@ import org.hibernate.Transaction;
 
 
 public class HumanDAO implements DAOstandart<Human>{
-    public Human getByID(int id){
-        return HibernateSessionFactory.getSessionFactory().openSession().get(Human.class,id);
+    public Human getByID(Long id){
+        Session session = HibernateSessionFactory.getSessionFactory().openSession();
+        Human human = session.get(Human.class,id);
+        session.close();
+        return human;
     }
 
     public void save(Human human){

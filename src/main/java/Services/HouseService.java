@@ -8,7 +8,7 @@ public class HouseService implements ServiceStandart<House>{
 
     public HouseService(){}
 
-    public House serviceGetByID(int ID){
+    public House serviceGetByID(Long ID){
         return houseDAO.getByID(ID);
     }
 

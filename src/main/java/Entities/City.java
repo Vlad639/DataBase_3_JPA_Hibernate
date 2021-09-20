@@ -19,6 +19,10 @@ public class City {
 
     public City(){}
 
+    public List<Street> getStreets() {
+        return streets;
+    }
+
     public City(String name){
         cityName = name;
     }

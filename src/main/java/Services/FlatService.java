@@ -9,7 +9,7 @@ public class FlatService implements ServiceStandart<Flat>{
 
     public FlatService(){}
 
-    public Flat serviceGetByID(int ID){
+    public Flat serviceGetByID(Long ID){
         return flatDAO.getByID(ID);
     }
 

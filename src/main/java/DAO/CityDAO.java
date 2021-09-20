@@ -7,8 +7,11 @@ import HibernateSessionFactory.HibernateSessionFactory;
 
 
 public class CityDAO implements DAOstandart<City>{
-    public City getByID(int id){
-        return HibernateSessionFactory.getSessionFactory().openSession().get(City.class,id);
+    public City getByID(Long id){
+        Session session = HibernateSessionFactory.getSessionFactory().openSession();
+        City city = session.get(City.class,id);
+        session.close();
+        return city;
     }
 
     public void save(City city){

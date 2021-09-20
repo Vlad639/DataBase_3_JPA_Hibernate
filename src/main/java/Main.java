@@ -19,12 +19,6 @@ public class Main {
     private static List<House> houseList = new ArrayList<>();
     private static List<Flat> flatList = new ArrayList<>();
     private static List<Human> humanList = new ArrayList<>();
-    private static Session session;
-
-
-    private static Session newSession(){
-        return HibernateSessionFactory.getSessionFactory().openSession();
-    }
 
     private static void showHumansFromList(List<Human> humanList){
         if (humanList.isEmpty()){
@@ -39,21 +33,19 @@ public class Main {
 
     public static void main(String[] args) {
 
-        session = newSession();
 
-        //fillTables();
+       //fillTables();
 
-        showHumansInCertainFlat(12);
-        //showFlatOwners(1);
-        //showHumansInCertainCity(2);
-        //showHumansInCertainHouse(3);
-        //showHumansFromStreetList(new int[]{7, 9});
-        //registerHumanInFlat(1, 4);
+        //--showHumansInCertainFlat(12);
+        //--showFlatOwners(5);
+        //--showHumansInCertainCity(2);
+        //--showHumansInCertainHouse(3);
+        //--showHumansFromStreetList(new long[]{2, 9});
+        registerHumanInFlat(7, 3);
         //deleteHumanFromFlat(2);
         //moveResidentsToNewFlat(42, 8);
         //changesFlatsResidents(3,7);
 
-        session.close();
 
     }
 
@@ -77,9 +69,6 @@ public class Main {
         }
         fillFlatsOwners();
         fillResidents();
-
-
-
 
     }
 
@@ -234,23 +223,26 @@ public class Main {
     }
 
     private static void fillFlatsOwners() {
-        HumanService humanService = new HumanService();
-        humanList.get(0).addFlatWhichHumanOwner(flatList.get(0));
-        humanList.get(1).addFlatWhichHumanOwner(flatList.get(4));
-        humanList.get(1).addFlatWhichHumanOwner(flatList.get(9));
-        humanList.get(2).addFlatWhichHumanOwner(flatList.get(11));
-        humanList.get(3).addFlatWhichHumanOwner(flatList.get(12));
-        humanList.get(4).addFlatWhichHumanOwner(flatList.get(13));
-        humanList.get(5).addFlatWhichHumanOwner(flatList.get(15));
-        humanList.get(6).addFlatWhichHumanOwner(flatList.get(17));
-        humanList.get(6).addFlatWhichHumanOwner(flatList.get(24));
-        humanList.get(7).addFlatWhichHumanOwner(flatList.get(25));
-        humanList.get(8).addFlatWhichHumanOwner(flatList.get(28));
-        humanList.get(12).addFlatWhichHumanOwner(flatList.get(30));
-        humanList.get(13).addFlatWhichHumanOwner(flatList.get(32));
+        FlatService flatService = new FlatService();
 
-        for (Human elem: humanList)
-            humanService.serviceUpdate(elem);
+        flatList.get(0).addOwner(humanList.get(0));
+        flatList.get(4).addOwner(humanList.get(1));
+        flatList.get(9).addOwner(humanList.get(1));
+        flatList.get(11).addOwner(humanList.get(2));
+        flatList.get(12).addOwner(humanList.get(3));
+        flatList.get(13).addOwner(humanList.get(4));
+        flatList.get(15).addOwner(humanList.get(5));
+        flatList.get(17).addOwner(humanList.get(6));
+        flatList.get(13).addOwner(humanList.get(4));
+        flatList.get(24).addOwner(humanList.get(6));
+        flatList.get(25).addOwner(humanList.get(7));
+        flatList.get(28).addOwner(humanList.get(8));
+        flatList.get(30).addOwner(humanList.get(12));
+        flatList.get(32).addOwner(humanList.get(13));
+
+        for (Flat elem: flatList)
+            flatService.serviceUpdate(elem);
+
     }
 
     private static void fillResidents(){
@@ -265,41 +257,91 @@ public class Main {
         flatList.get(17).addResident(humanList.get(7));
         flatList.get(24).addResident(humanList.get(8));
         flatList.get(25).addResident(humanList.get(9));
-        flatList.get(28).addResident(humanList.get(10));
-        flatList.get(30).addResident(humanList.get(11));
-        flatList.get(47).addResident(humanList.get(13));
+        flatList.get(50).addResident(humanList.get(10));
+        flatList.get(56).addResident(humanList.get(11));
+        flatList.get(57).addResident(humanList.get(13));
 
         for (Flat elem: flatList)
             flatService.serviceUpdate(elem);
     }
 
 
-    private static void showHumansInCertainFlat(int flatID) {
+    private static void showHumansInCertainFlat(long flatID) {
         FlatService flatService = new FlatService();
         Flat flat = flatService.serviceGetByID(flatID);
         showHumansFromList(flat.getResidents());
+    }
 
+    private static void showFlatOwners(long flatID) {
+        FlatService flatService = new FlatService();
+        Flat flat = flatService.serviceGetByID(flatID);
+        showHumansFromList(flat.getOwners());
+    }
+
+    private static void showHumansInCertainCity(long cityID) {
+        CityService cityService = new CityService();
+        City city = cityService.serviceGetByID(cityID);
+        List<Street> streetsFromCity = city.getStreets();
+        List<House> housesFromAllStreets = new ArrayList<>();
+        List<Flat> flatsFromAllHouses = new ArrayList<>();
+        List<Human> humansFromAllFlats = new ArrayList<>();
+
+        for (Street street: streetsFromCity)
+            housesFromAllStreets.addAll(street.getHouses());
+
+        for (House house: housesFromAllStreets)
+            flatsFromAllHouses.addAll(house.getFlats());
+
+        for (Flat flat: flatsFromAllHouses)
+            humansFromAllFlats.addAll(flat.getResidents());
+
+        showHumansFromList(humansFromAllFlats);
+    }
+
+    private static void showHumansInCertainHouse(long houseID)  {
+        HouseService houseService = new HouseService();
+        House house = houseService.serviceGetByID(houseID);
+        List<Flat> flatsFromHouse = house.getFlats();
+        List<Human> humansFromFlats = new ArrayList<>();
+
+        for (Flat flat: flatsFromHouse)
+            humansFromFlats.addAll(flat.getResidents());
+
+        showHumansFromList(humansFromFlats);
+    }
+
+    private static void showHumansFromStreetList(long[] streetList) {
+        StreetService streetService = new StreetService();
+
+        List<House> housesFromAllStreets = new ArrayList<>();
+        List<Flat> flatsFromAllHouses = new ArrayList<>();
+        List<Human> humansFromAllFlats = new ArrayList<>();
+
+        for (long streetID: streetList) {
+            Street street = streetService.serviceGetByID(streetID);
+            housesFromAllStreets.addAll(street.getHouses());
+        }
+
+        for (House house: housesFromAllStreets)
+            flatsFromAllHouses.addAll(house.getFlats());
+
+        for (Flat flat: flatsFromAllHouses)
+            humansFromAllFlats.addAll(flat.getResidents());
+
+        showHumansFromList(humansFromAllFlats);
 
     }
 
-    private static void showFlatOwners(int flatID) {
+    private static void registerHumanInFlat(long human_id, long flat_id) {
+        //HumanService humanService = new HumanService();
+        FlatService flatService = new FlatService();
 
-    }
+        //Human human = humanService.serviceGetByID(4L);
+        Flat flat = flatService.serviceGetByID(5L);
 
-    private static void showHumansInCertainCity(int cityID) {
-
-    }
-
-    private static void showHumansInCertainHouse(int houseID)  {
-
-    }
-
-    private static void showHumansFromStreetList(int[] streetList) {
-
-    }
-
-    private static void registerHumanInFlat(int human_id, int flat_id)  {
-
+        flat.setFlatNumber(1000);
+        System.out.println(flat.getFlatNumber());
+        flatService.serviceUpdate(flat);
     }
 
     private static void deleteHumanFromFlat(int human_id) {

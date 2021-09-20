@@ -2,7 +2,7 @@ package Services;
 
 public interface ServiceStandart<T> {
 
-    public T serviceGetByID(int ID);
+    public T serviceGetByID(Long ID);
 
     public void serviceSave(T obj);
 

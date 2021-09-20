@@ -19,7 +19,7 @@ public class Human {
             joinColumns = @JoinColumn(name = "human_link"),
             inverseJoinColumns = @JoinColumn(name = "flat_link")
     )
-    private List<Flat> flatsOfThisHuman;
+    private List<Flat> flatsInWhichHumanOwner;
 
     @ManyToMany
     @JoinTable(
@@ -28,6 +28,30 @@ public class Human {
             inverseJoinColumns = @JoinColumn(name = "flat_link")
     )
     private List<Flat> flatsInWhichHumanLive;
+
+    public List<Flat> getFlatsInWhichHumanOwner() {
+        return flatsInWhichHumanOwner;
+    }
+
+    public void addFlat(Flat flat){
+        if (flatsInWhichHumanLive == null){
+            flatsInWhichHumanLive = new ArrayList<>();
+        }
+
+        flatsInWhichHumanLive.add(flat);
+    }
+
+    public void setFlatsInWhichHumanOwner(List<Flat> flatsInWhichHumanOwner) {
+        this.flatsInWhichHumanOwner = flatsInWhichHumanOwner;
+    }
+
+    public List<Flat> getFlatsInWhichHumanLive() {
+        return flatsInWhichHumanLive;
+    }
+
+    public void setFlatsInWhichHumanLive(List<Flat> flatsInWhichHumanLive) {
+        this.flatsInWhichHumanLive = flatsInWhichHumanLive;
+    }
 
     @Column(name = "passport_number")
     private String passportNumber;
@@ -43,13 +67,6 @@ public class Human {
 
     @Column(name = "born_date")
     private Date bornDate;
-
-    public void addFlatWhichHumanOwner(Flat flat){
-        if (flatsOfThisHuman == null)
-            flatsOfThisHuman = new ArrayList<>();
-
-        flatsOfThisHuman.add(flat);
-    }
 
     private Date toDate(String date) throws DataConvertException {
         String[] words = date.split("\\.");
@@ -72,7 +89,7 @@ public class Human {
 
     @Override
     public String toString() {
-        return "Human: " +
+        return "Human: " + humanID +" " +
                 passportNumber + " " + secondName + " " + firstName +" " +lastName +" "+ bornDate;
     }
 

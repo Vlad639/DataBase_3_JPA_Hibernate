@@ -21,6 +21,10 @@ public class House {
     @OneToMany(mappedBy = "houseLink", cascade = CascadeType.ALL)
     private List<Flat> flats;
 
+    public List<Flat> getFlats() {
+        return flats;
+    }
+
     public House(){}
 
     public House(String number, Street streetLink){

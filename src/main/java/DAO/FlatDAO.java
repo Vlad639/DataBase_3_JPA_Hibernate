@@ -8,8 +8,11 @@ import org.hibernate.Transaction;
 
 
 public class FlatDAO implements DAOstandart<Flat>{
-    public Flat getByID(int id){
-        return HibernateSessionFactory.getSessionFactory().openSession().get(Flat.class,id);
+    public Flat getByID(Long id){
+        Session session  = HibernateSessionFactory.getSessionFactory().openSession();
+        Flat flat = session.get(Flat.class,id);
+        session.close();
+        return flat;
     }
 
     public void save(Flat flat){
