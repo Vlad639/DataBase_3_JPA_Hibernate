@@ -6,7 +6,7 @@ import org.hibernate.Transaction;
 import HibernateSessionFactory.HibernateSessionFactory;
 
 
-public class CityDAO implements DAOstandart<City>{
+public class CityDAO implements DAOStandart<City> {
     public City getByID(Long id){
         Session session = HibernateSessionFactory.getSessionFactory().openSession();
         City city = session.get(City.class,id);

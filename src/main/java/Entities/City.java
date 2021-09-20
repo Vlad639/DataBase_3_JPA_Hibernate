@@ -40,5 +40,4 @@ public class City {
         return cityID + " " +cityName;
     }
 
-
 }

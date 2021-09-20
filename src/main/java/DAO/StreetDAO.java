@@ -6,7 +6,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 
-public class StreetDAO implements DAOstandart<Street>{
+public class StreetDAO implements DAOStandart<Street> {
     public Street getByID(Long id){
         Session session = HibernateSessionFactory.getSessionFactory().openSession();
         Street street = session.get(Street.class,id);

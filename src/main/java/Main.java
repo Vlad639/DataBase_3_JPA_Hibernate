@@ -1,16 +1,8 @@
 import Entities.City;
-import HibernateSessionFactory.HibernateSessionFactory;
 import Services.*;
-
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-
 import Entities.*;
-import org.hibernate.Session;
-import org.hibernate.query.NativeQuery;
 
 public class Main {
 
@@ -19,6 +11,9 @@ public class Main {
     private static List<House> houseList = new ArrayList<>();
     private static List<Flat> flatList = new ArrayList<>();
     private static List<Human> humanList = new ArrayList<>();
+
+    private static HumanService humanService = new HumanService();
+    private static FlatService flatService = new FlatService();
 
     private static void showHumansFromList(List<Human> humanList){
         if (humanList.isEmpty()){
@@ -33,19 +28,17 @@ public class Main {
 
     public static void main(String[] args) {
 
+       fillTables();
 
-       //fillTables();
-
-        //--showHumansInCertainFlat(12);
-        //--showFlatOwners(5);
-        //--showHumansInCertainCity(2);
-        //--showHumansInCertainHouse(3);
-        //--showHumansFromStreetList(new long[]{2, 9});
-        registerHumanInFlat(7, 3);
-        //deleteHumanFromFlat(2);
-        //moveResidentsToNewFlat(42, 8);
-        //changesFlatsResidents(3,7);
-
+        //showHumansInCertainFlat(12);
+        //showFlatOwners(5);
+        //showHumansInCertainCity(2);
+        //showHumansInCertainHouse(3);
+        //showHumansFromStreetList(new long[]{2, 9});
+        //registerHumanInFlat(7, 3);
+        //deleteHumanFromFlat(11);
+        //moveResidentsToNewFlat(16, 20);
+        //changesFlatsResidents(12, 6);
 
     }
 
@@ -54,7 +47,6 @@ public class Main {
             service.serviceSave(elem);
         }
     }
-
 
     private static void fillTables() {
         fillCities();
@@ -134,7 +126,6 @@ public class Main {
     }
 
     private static void fillHumans() throws DataConvertException {
-        HumanService humanService = new HumanService();
         humanList.add(new Human("1234567890", "Иванов", "Иван", "Иванович", "01.02.2001"));
         humanList.add(new Human("1234567891", "Кудряшов", "Шарль", "Ярославович", "01.01.2001"));
         humanList.add(new Human("1234567810", "Антонова", "Елена", "Тимуровна", "12.02.2000"));
@@ -154,8 +145,6 @@ public class Main {
     }
 
     private static void fillFlats(){
-        FlatService flatService = new FlatService();
-
         flatList.add(new Flat(1, houseList.get(0)));
         flatList.add(new Flat(2, houseList.get(0)));
         flatList.add(new Flat(3, houseList.get(0)));
@@ -223,8 +212,6 @@ public class Main {
     }
 
     private static void fillFlatsOwners() {
-        FlatService flatService = new FlatService();
-
         flatList.get(0).addOwner(humanList.get(0));
         flatList.get(4).addOwner(humanList.get(1));
         flatList.get(9).addOwner(humanList.get(1));
@@ -246,7 +233,6 @@ public class Main {
     }
 
     private static void fillResidents(){
-        FlatService flatService = new FlatService();
         flatList.get(0).addResident(humanList.get(0));
         flatList.get(4).addResident(humanList.get(1));
         flatList.get(5).addResident(humanList.get(2));
@@ -265,15 +251,12 @@ public class Main {
             flatService.serviceUpdate(elem);
     }
 
-
     private static void showHumansInCertainFlat(long flatID) {
-        FlatService flatService = new FlatService();
         Flat flat = flatService.serviceGetByID(flatID);
         showHumansFromList(flat.getResidents());
     }
 
     private static void showFlatOwners(long flatID) {
-        FlatService flatService = new FlatService();
         Flat flat = flatService.serviceGetByID(flatID);
         showHumansFromList(flat.getOwners());
     }
@@ -333,27 +316,47 @@ public class Main {
     }
 
     private static void registerHumanInFlat(long human_id, long flat_id) {
-        //HumanService humanService = new HumanService();
-        FlatService flatService = new FlatService();
+        Human human = humanService.serviceGetByID(human_id);
+        Flat flat = flatService.serviceGetByID(flat_id);
 
-        //Human human = humanService.serviceGetByID(4L);
-        Flat flat = flatService.serviceGetByID(5L);
+        flat.addResident(human);
 
-        flat.setFlatNumber(1000);
-        System.out.println(flat.getFlatNumber());
         flatService.serviceUpdate(flat);
+        humanService.serviceUpdate(human);
     }
 
-    private static void deleteHumanFromFlat(int human_id) {
+    private static void deleteHumanFromFlat(long human_id) {
+        Human human = humanService.serviceGetByID(human_id);
+
+        human.setFlatsInWhichHumanLive(null);
+        humanService.serviceUpdate(human);
+    }
+
+    private static void moveResidentsToNewFlat(long oldFlatID, long newFlatID) {
+        Flat oldFlat = flatService.serviceGetByID(oldFlatID);
+        Flat newFlat = flatService.serviceGetByID(newFlatID);
+
+        List<Human> oldFlatResidents = oldFlat.getResidents();
+        oldFlat.setResidents(null);
+        newFlat.setResidents(oldFlatResidents);
+
+        flatService.serviceUpdate(oldFlat);
+        flatService.serviceUpdate(newFlat);
 
     }
 
-    private static void moveResidentsToNewFlat(int oldFlat, int newFlat) {
+    private static void changesFlatsResidents(long firstFlatID, long secondFlatID) {
+        Flat firstFlat = flatService.serviceGetByID(firstFlatID);
+        Flat secondFlat = flatService.serviceGetByID(secondFlatID);
 
-    }
+        List<Human> firstFlatResidents = List.copyOf(firstFlat.getResidents());
+        List<Human> secondFlatResidents = List.copyOf(secondFlat.getResidents());
 
-    private static void changesFlatsResidents(int firstFlatID, int secondFlatID) {
+        firstFlat.setResidents(secondFlatResidents);
+        secondFlat.setResidents(firstFlatResidents);
 
+        flatService.serviceUpdate(firstFlat);
+        flatService.serviceUpdate(secondFlat);
 
     }
 

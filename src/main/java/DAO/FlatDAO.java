@@ -1,13 +1,12 @@
 package DAO;
 
 import Entities.Flat;
-import Entities.Street;
 import HibernateSessionFactory.HibernateSessionFactory;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 
-public class FlatDAO implements DAOstandart<Flat>{
+public class FlatDAO implements DAOStandart<Flat> {
     public Flat getByID(Long id){
         Session session  = HibernateSessionFactory.getSessionFactory().openSession();
         Flat flat = session.get(Flat.class,id);

@@ -13,7 +13,7 @@ public class Human {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long humanID;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "public.\"Flats_owners\"",
             joinColumns = @JoinColumn(name = "human_link"),
@@ -21,7 +21,7 @@ public class Human {
     )
     private List<Flat> flatsInWhichHumanOwner;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "public.\"Residents\"",
             joinColumns = @JoinColumn(name = "human_link"),
@@ -31,14 +31,6 @@ public class Human {
 
     public List<Flat> getFlatsInWhichHumanOwner() {
         return flatsInWhichHumanOwner;
-    }
-
-    public void addFlat(Flat flat){
-        if (flatsInWhichHumanLive == null){
-            flatsInWhichHumanLive = new ArrayList<>();
-        }
-
-        flatsInWhichHumanLive.add(flat);
     }
 
     public void setFlatsInWhichHumanOwner(List<Flat> flatsInWhichHumanOwner) {
@@ -87,10 +79,22 @@ public class Human {
         this.bornDate = toDate(bornDate);
     }
 
+
+    private String getDateWithoutTime(Date date) {
+        String dateString = date.toString().replace(" 00:00:00.0", "");
+        String[] words = dateString.split("-");
+
+        String day = words[2];
+        String month = words[1];
+        String year = words[0];
+
+        return day + "." + month + "." + year;
+    }
+
     @Override
     public String toString() {
         return "Human: " + humanID +" " +
-                passportNumber + " " + secondName + " " + firstName +" " +lastName +" "+ bornDate;
+                passportNumber + " " + secondName + " " + firstName +" " +lastName +" "+ getDateWithoutTime(bornDate);
     }
 
     public Human(){}

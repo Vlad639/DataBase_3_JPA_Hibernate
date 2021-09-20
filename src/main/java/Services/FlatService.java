@@ -1,7 +1,6 @@
 package Services;
 
 import DAO.FlatDAO;
-import DAO.HouseDAO;
 import Entities.Flat;
 
 public class FlatService implements ServiceStandart<Flat>{

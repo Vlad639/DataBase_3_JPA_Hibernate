@@ -12,7 +12,7 @@ public class Flat {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long flatID;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "public.\"Flats_owners\"",
             joinColumns = @JoinColumn(name = "flat_link"),
@@ -20,7 +20,7 @@ public class Flat {
     )
     private List<Human> owners;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "public.\"Residents\"",
             joinColumns = @JoinColumn(name = "flat_link"),
@@ -31,7 +31,7 @@ public class Flat {
     @Column(name = "flat_number")
     private int flatNumber;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "house_link")
     private House houseLink;
 
@@ -42,8 +42,12 @@ public class Flat {
         return residents;
     }
 
+    public void setResidents(List<Human> residents) {
+        this.residents = residents;
+    }
+
     public void addResident(Human resident){
-        if (residents == null)
+        if (residents == null || residents.isEmpty())
             residents = new ArrayList<>();
 
         residents.add(resident);

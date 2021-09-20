@@ -6,7 +6,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 
-public class HumanDAO implements DAOstandart<Human>{
+public class HumanDAO implements DAOStandart<Human> {
     public Human getByID(Long id){
         Session session = HibernateSessionFactory.getSessionFactory().openSession();
         Human human = session.get(Human.class,id);

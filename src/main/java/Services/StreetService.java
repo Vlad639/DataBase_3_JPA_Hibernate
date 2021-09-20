@@ -1,8 +1,6 @@
 package Services;
 
-import DAO.CityDAO;
 import DAO.StreetDAO;
-import Entities.City;
 import Entities.Street;
 
 public class StreetService implements ServiceStandart<Street>{
