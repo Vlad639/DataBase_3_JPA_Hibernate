@@ -1,10 +1,10 @@
 package Services;
 
-import DAO.StreetDAO;
+import DAO.UnutyDAO;
 import Entities.Street;
 
 public class StreetService implements ServiceStandart<Street>{
-    private final StreetDAO streetDAO = new StreetDAO();
+    private final UnutyDAO<Street> streetDAO = new UnutyDAO<>(Street.class);
 
     public StreetService(){}
 

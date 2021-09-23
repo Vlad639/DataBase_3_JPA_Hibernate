@@ -3,10 +3,11 @@ package Services;
 import DAO.UnutyDAO;
 import Entities.City;
 
-public class CityService implements ServiceStandart<City>{
+public class UnityService{
     private final UnutyDAO<City> cityDAO = new UnutyDAO<>(City.class);
 
-    public CityService(){}
+
+    public UnityService(){}
 
     public City serviceGetByID(Long ID){
         return cityDAO.getByID(ID);

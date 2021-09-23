@@ -1,10 +1,10 @@
 package Services;
 
-import DAO.HumanDAO;
+import DAO.UnutyDAO;
 import Entities.Human;
 
 public class HumanService implements ServiceStandart<Human>{
-    private final HumanDAO humanDAO = new HumanDAO();
+    private final UnutyDAO<Human> humanDAO = new UnutyDAO<>(Human.class);
 
     public HumanService(){}
 

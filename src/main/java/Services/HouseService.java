@@ -1,10 +1,10 @@
 package Services;
 
-import DAO.HouseDAO;
+import DAO.UnutyDAO;
 import Entities.House;
 
 public class HouseService implements ServiceStandart<House>{
-    private final HouseDAO houseDAO = new HouseDAO();
+    private final UnutyDAO<House> houseDAO = new UnutyDAO<>(House.class);
 
     public HouseService(){}
 

@@ -1,39 +1,45 @@
 package DAO;
 
-import Entities.House;
+import Entities.City;
 import HibernateSessionFactory.HibernateSessionFactory;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 
-public class HouseDAO implements DAOStandart<House> {
-    public House getByID(Long id){
+public class UnutyDAO<T> {
+    Class<T> objectClass;
+
+    public T getByID(Long id){
         Session session = HibernateSessionFactory.getSessionFactory().openSession();
-        House house = session.get(House.class,id);
+        T object = session.get(objectClass ,id);
         session.close();
-        return house;
+        return object;
     }
 
-    public void save(House house){
+    public UnutyDAO(Class<T> objectClass) {
+        this.objectClass = objectClass;
+    }
+
+    public void save(T object){
         Session session = HibernateSessionFactory.getSessionFactory().openSession();
         Transaction transaction = session.beginTransaction();
-        session.save(house);
+        session.save(object);
         transaction.commit();
         session.close();
     }
 
-    public void update(House house){
+    public void update(T object){
         Session session = HibernateSessionFactory.getSessionFactory().openSession();
         Transaction transaction = session.beginTransaction();
-        session.update(house);
+        session.update(object);
         transaction.commit();
         session.close();
     }
 
-    public void delete(House house){
+    public void delete(T object){
         Session session = HibernateSessionFactory.getSessionFactory().openSession();
         Transaction transaction = session.beginTransaction();
-        session.delete(house);
+        session.delete(object);
         transaction.commit();
         session.close();
     }

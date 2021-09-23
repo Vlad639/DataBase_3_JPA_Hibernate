@@ -1,3 +1,4 @@
+import DAO.UnutyDAO;
 import Entities.City;
 import Services.*;
 import java.util.ArrayList;
@@ -28,9 +29,9 @@ public class Main {
 
     public static void main(String[] args) {
 
-       fillTables();
+        //fillTables();
 
-        //showHumansInCertainFlat(12);
+        showHumansInCertainFlat(12);
         //showFlatOwners(5);
         //showHumansInCertainCity(2);
         //showHumansInCertainHouse(3);
@@ -252,7 +253,7 @@ public class Main {
     }
 
     private static void showHumansInCertainFlat(long flatID) {
-        Flat flat = flatService.serviceGetByID(flatID);
+        Flat flat = new UnutyDAO<Flat>(Flat.class).getByID(flatID);
         showHumansFromList(flat.getResidents());
     }
 
