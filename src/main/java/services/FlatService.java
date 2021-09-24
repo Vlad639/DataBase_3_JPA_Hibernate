@@ -1,7 +1,7 @@
-package Services;
+package services;
 
-import DAO.UnutyDAO;
-import Entities.Flat;
+import dao.UnutyDAO;
+import entities.Flat;
 
 public class FlatService implements ServiceStandart<Flat>{
     private final UnutyDAO<Flat> flatDAO = new UnutyDAO<>(Flat.class);

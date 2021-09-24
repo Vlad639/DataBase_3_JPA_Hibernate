@@ -1,9 +1,10 @@
-import DAO.UnutyDAO;
-import Entities.City;
-import Services.*;
+import entities.City;
+import services.*;
+
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
-import Entities.*;
+import entities.*;
 
 public class Main {
 
@@ -29,7 +30,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        //fillTables();
+        fillTables();
 
         showHumansInCertainFlat(12);
         //showFlatOwners(5);
@@ -56,8 +57,7 @@ public class Main {
         fillFlats();
         try {
             fillHumans();
-        }
-        catch (DataConvertException e){
+        } catch (ParseException e) {
             e.printStackTrace();
         }
         fillFlatsOwners();
@@ -126,7 +126,7 @@ public class Main {
         saveObjectInDataBase(houseList, houseService);
     }
 
-    private static void fillHumans() throws DataConvertException {
+    private static void fillHumans() throws ParseException {
         humanList.add(new Human("1234567890", "Иванов", "Иван", "Иванович", "01.02.2001"));
         humanList.add(new Human("1234567891", "Кудряшов", "Шарль", "Ярославович", "01.01.2001"));
         humanList.add(new Human("1234567810", "Антонова", "Елена", "Тимуровна", "12.02.2000"));
@@ -253,7 +253,7 @@ public class Main {
     }
 
     private static void showHumansInCertainFlat(long flatID) {
-        Flat flat = new UnutyDAO<Flat>(Flat.class).getByID(flatID);
+        Flat flat = flatService.serviceGetByID(flatID);
         showHumansFromList(flat.getResidents());
     }
 

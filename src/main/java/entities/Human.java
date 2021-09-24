@@ -1,7 +1,8 @@
-package Entities;
+package entities;
 
 import javax.persistence.*;
-import java.util.ArrayList;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -60,18 +61,12 @@ public class Human {
     @Column(name = "born_date")
     private Date bornDate;
 
-    private Date toDate(String date) throws DataConvertException {
-        String[] words = date.split("\\.");
-        int day = Integer.parseInt(words[0]);
-        int month = Integer.parseInt(words[1])-1;
-        int year = Integer.parseInt(words[2]) - 1900;
-
-        if (day < 1 || day > 31) throw new DataConvertException("Неверный день!");
-        if (month < 0 || month > 11) throw new DataConvertException("Неверный месяц!");
-        return new Date(year, month, day);
+    private Date toDate(String date) throws ParseException {
+        SimpleDateFormat parser = new SimpleDateFormat("dd.MM.yyyy");
+        return parser.parse(date);
     }
 
-    public Human(String passportNumber, String secondName, String firstName, String lastName, String bornDate) throws DataConvertException {
+    public Human(String passportNumber, String secondName, String firstName, String lastName, String bornDate) throws ParseException {
         this.passportNumber = passportNumber;
         this.secondName = secondName;
         this.firstName = firstName;
@@ -80,21 +75,14 @@ public class Human {
     }
 
 
-    private String getDateWithoutTime(Date date) {
-        String dateString = date.toString().replace(" 00:00:00.0", "");
-        String[] words = dateString.split("-");
-
-        String day = words[2];
-        String month = words[1];
-        String year = words[0];
-
-        return day + "." + month + "." + year;
+    private String getStringBornDate() {
+        return new SimpleDateFormat("dd.MM.yyyy").format(bornDate);
     }
 
     @Override
     public String toString() {
         return "Human: " + humanID +" " +
-                passportNumber + " " + secondName + " " + firstName +" " +lastName +" "+ getDateWithoutTime(bornDate);
+                passportNumber + " " + secondName + " " + firstName +" " +lastName +" "+ getStringBornDate();
     }
 
     public Human(){}

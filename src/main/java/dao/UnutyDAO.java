@@ -1,7 +1,6 @@
-package DAO;
+package dao;
 
-import Entities.City;
-import HibernateSessionFactory.HibernateSessionFactory;
+import hibernateSessionFactory.HibernateSessionFactory;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -14,6 +13,10 @@ public class UnutyDAO<T> {
         T object = session.get(objectClass ,id);
         session.close();
         return object;
+    }
+
+    private UnutyDAO(){
+
     }
 
     public UnutyDAO(Class<T> objectClass) {
