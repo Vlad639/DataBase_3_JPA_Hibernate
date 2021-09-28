@@ -1,27 +1,26 @@
 package services;
 
-import dao.UnutyDAO;
+import dao.UnityDAO;
 import entities.Human;
 
 public class HumanService implements ServiceStandart<Human>{
-    private final UnutyDAO<Human> humanDAO = new UnutyDAO<>(Human.class);
 
     public HumanService(){}
 
     public Human serviceGetByID(Long ID){
-        return humanDAO.getByID(ID);
+        return UnityDAO.getByID(Human.class, ID);
     }
 
     public void serviceSave(Human human){
-        humanDAO.save(human);
+        UnityDAO.save(human);
     }
 
     public void serviceUpdate(Human human){
-        humanDAO.update(human);
+        UnityDAO.update(human);
     }
 
     public void serviceDelete(Human human){
-        humanDAO.delete(human);
+        UnityDAO.delete(human);
     }
 
 }

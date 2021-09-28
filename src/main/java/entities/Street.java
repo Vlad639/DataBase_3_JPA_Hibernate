@@ -18,7 +18,7 @@ public class Street {
     @JoinColumn(name = "city_link")
     private City cityLink;
 
-   @OneToMany(mappedBy = "streetLink", cascade = CascadeType.ALL)
+   @OneToMany(mappedBy = "streetLink", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
    private List<House> houses;
 
     public List<House> getHouses() {

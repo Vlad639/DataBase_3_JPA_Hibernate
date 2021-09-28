@@ -1,26 +1,26 @@
 package services;
 
-import dao.UnutyDAO;
+import dao.UnityDAO;
 import entities.City;
 
 public class CityService implements ServiceStandart<City>{
-    private final UnutyDAO<City> cityDAO = new UnutyDAO<>(City.class);
+
 
     public CityService(){}
 
     public City serviceGetByID(Long ID){
-        return cityDAO.getByID(ID);
+        return UnityDAO.getByID(City.class, ID);
     }
 
     public void serviceSave(City city){
-        cityDAO.save(city);
+        UnityDAO.save(city);
     }
 
     public void serviceUpdate(City city){
-        cityDAO.update(city);
+        UnityDAO.update(city);
     }
 
     public void serviceDelete(City city){
-        cityDAO.delete(city);
+        UnityDAO.delete(city);
     }
 }

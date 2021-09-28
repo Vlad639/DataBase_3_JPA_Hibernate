@@ -1,26 +1,26 @@
 package services;
 
-import dao.UnutyDAO;
+import dao.UnityDAO;
 import entities.House;
 
 public class HouseService implements ServiceStandart<House>{
-    private final UnutyDAO<House> houseDAO = new UnutyDAO<>(House.class);
+
 
     public HouseService(){}
 
     public House serviceGetByID(Long ID){
-        return houseDAO.getByID(ID);
+        return UnityDAO.getByID(House.class, ID);
     }
 
     public void serviceSave(House house){
-        houseDAO.save(house);
+        UnityDAO.save(house);
     }
 
     public void serviceUpdate(House house){
-        houseDAO.update(house);
+        UnityDAO.update(house);
     }
 
     public void serviceDelete(House house){
-        houseDAO.delete(house);
+        UnityDAO.delete(house);
     }
 }

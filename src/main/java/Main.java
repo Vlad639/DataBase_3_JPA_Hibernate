@@ -32,7 +32,7 @@ public class Main {
 
         fillTables();
 
-        showHumansInCertainFlat(12);
+        //showHumansInCertainFlat(12);
         //showFlatOwners(5);
         //showHumansInCertainCity(2);
         //showHumansInCertainHouse(3);
@@ -323,7 +323,6 @@ public class Main {
         flat.addResident(human);
 
         flatService.serviceUpdate(flat);
-        humanService.serviceUpdate(human);
     }
 
     private static void deleteHumanFromFlat(long human_id) {
@@ -341,8 +340,7 @@ public class Main {
         oldFlat.setResidents(null);
         newFlat.setResidents(oldFlatResidents);
 
-        flatService.serviceUpdate(oldFlat);
-        flatService.serviceUpdate(newFlat);
+        flatService.serviceMultipleUpdate(List.of(oldFlat, newFlat));
 
     }
 
@@ -356,8 +354,7 @@ public class Main {
         firstFlat.setResidents(secondFlatResidents);
         secondFlat.setResidents(firstFlatResidents);
 
-        flatService.serviceUpdate(firstFlat);
-        flatService.serviceUpdate(secondFlat);
+        flatService.serviceMultipleUpdate(List.of(firstFlat, secondFlat));
 
     }
 

@@ -14,7 +14,7 @@ public class City {
     @Column(name = "city_name")
     private String cityName;
 
-    @OneToMany(mappedBy = "cityLink", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "cityLink", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Street> streets;
 
     public City(){}

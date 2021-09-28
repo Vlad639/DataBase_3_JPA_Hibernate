@@ -1,26 +1,34 @@
 package services;
 
-import dao.UnutyDAO;
+import dao.UnityDAO;
 import entities.Flat;
 
+import java.util.List;
+
 public class FlatService implements ServiceStandart<Flat>{
-    private final UnutyDAO<Flat> flatDAO = new UnutyDAO<>(Flat.class);
+
 
     public FlatService(){}
 
     public Flat serviceGetByID(Long ID){
-        return flatDAO.getByID(ID);
+        return UnityDAO.getByID(Flat.class, ID);
     }
 
     public void serviceSave(Flat flat){
-        flatDAO.save(flat);
+        UnityDAO.save(flat);
     }
 
     public void serviceUpdate(Flat flat){
-        flatDAO.update(flat);
+        UnityDAO.update(flat);
+    }
+
+    public void serviceMultipleUpdate(List<Flat> flats){
+        UnityDAO.multipleUpdate(flats);
     }
 
     public void serviceDelete(Flat flat){
-        flatDAO.delete(flat);
+        UnityDAO.delete(flat);
     }
+
+
 }
